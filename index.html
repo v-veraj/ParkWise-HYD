@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f1d3b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ParkWise">
+  <title>ParkWise HYD | Live Demo</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">P</span>
+      <div>
+        <strong>ParkWise HYD</strong>
+        <small>Smart Parking Copilot</small>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="installApp" class="install-button" hidden>Install app</button>
+      <div class="live-status"><span class="live-dot"></span> <span class="live-label">LIVE CAMPUS DATA</span> <span id="clock"></span></div>
+    </div>
+  </header>
+
+  <main>
+    <aside class="journey-panel">
+      <p class="eyebrow">YOUR JOURNEY</p>
+      <ol id="journeySteps">
+        <li class="active"><span>1</span><div><strong>Plan arrival</strong><small>Destination and preferences</small></div></li>
+        <li><span>2</span><div><strong>Choose parking</strong><small>AI recommendation</small></div></li>
+        <li><span>3</span><div><strong>Reserve</strong><small>Fair, time-limited hold</small></div></li>
+        <li><span>4</span><div><strong>Navigate</strong><small>Gate and garage route</small></div></li>
+        <li><span>5</span><div><strong>Park and check in</strong><small>Confirm bay by QR</small></div></li>
+        <li><span>6</span><div><strong>Find my car</strong><small>Return route</small></div></li>
+      </ol>
+      <div class="privacy-note">
+        <span>◉</span>
+        <div><strong>Privacy-first</strong><small>ParkWise stores your selected bay, not your continuous location.</small></div>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div id="toast" class="toast" role="status"></div>
+
+      <section class="screen active" data-screen="moveinsync">
+        <div class="mis-mobile-shell">
+          <div class="mis-greeting">
+            <div>
+              <p class="eyebrow">EMPLOYEE APP · INTEGRATION DEMO</p>
+              <h1>Good morning, Vera</h1>
+              <p>Your commute and campus arrival in one place.</p>
+            </div>
+            <span class="profile-avatar">V</span>
+          </div>
+          <div class="mis-status-strip">
+            <span><i class="live-dot"></i> Hyderabad campus services online</span>
+            <strong>Sunday, 30 August</strong>
+          </div>
+          <div class="mis-grid">
+            <article class="mis-card transport-card">
+              <div class="mis-icon bus-icon">↝</div>
+              <p class="eyebrow">TODAY'S COMMUTE</p>
+              <h2>Office cab not scheduled</h2>
+              <p>Travelling in your registered vehicle?</p>
+              <button class="secondary" id="scheduleCab">Schedule a cab</button>
+            </article>
+            <article class="mis-card parkwise-entry">
+              <span class="new-chip">NEW</span>
+              <div class="mis-icon parking-icon">P</div>
+              <p class="eyebrow">CAMPUS PARKING</p>
+              <h2>Reserve parking with ParkWise</h2>
+              <p>Get the right gate, zone, bay, and walking route before you arrive.</p>
+              <div class="integration-context">
+                <span>Destination <strong>Building 4</strong></span>
+                <span>Arrival <strong>10:00 AM</strong></span>
+              </div>
+              <button class="primary" id="openParkWise">Find parking <span>→</span></button>
+            </article>
+            <article class="mis-card mini-card">
+              <div class="mis-icon">▣</div><div><strong>My bookings</strong><small>Transport and parking</small></div>
+            </article>
+            <article class="mis-card mini-card">
+              <div class="mis-icon">?</div><div><strong>Help and safety</strong><small>Support and emergency</small></div>
+            </article>
+          </div>
+          <p class="prototype-disclaimer">Hackathon prototype using simulated MoveInSync context and integration callbacks. No production API is connected.</p>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="plan">
+        <div class="screen-heading">
+          <div><p class="eyebrow">STEP 1</p><h1>Where are you going?</h1></div>
+          <span class="copilot-badge">✦ COPILOT</span>
+        </div>
+        <div class="split-layout">
+          <form id="tripForm" class="surface form-card">
+            <label>Campus destination
+              <select id="destination">
+                <option>Building 4</option>
+                <option>Building 3</option>
+                <option>Building 2</option>
+              </select>
+            </label>
+            <label>Expected arrival
+              <input id="arrivalTime" type="time" value="10:00">
+            </label>
+            <fieldset>
+              <legend>Parking preference</legend>
+              <label class="choice"><input type="radio" name="preference" value="Closest walk" checked><span>Closest walk</span></label>
+              <label class="choice"><input type="radio" name="preference" value="Accessible route"><span>Accessible route</span></label>
+              <label class="choice"><input type="radio" name="preference" value="EV charging"><span>EV charging</span></label>
+            </fieldset>
+            <button class="primary" type="submit">Find the best parking <span>→</span></button>
+          </form>
+          <div class="surface campus-card">
+            <div class="campus-map">
+              <span class="building b2">B2</span>
+              <span class="building b3">B3</span>
+              <span class="building b4 selected">B4</span>
+              <span class="garage">MLCP</span>
+              <span class="gate g3">Gate 3</span>
+              <span class="route-line"></span>
+            </div>
+            <div class="map-legend"><span><i class="available"></i> Available</span><span><i class="busy"></i> Busy</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="recommend">
+        <div class="screen-heading">
+          <div><p class="eyebrow">STEP 2</p><h1>Your best parking options</h1></div>
+          <span class="updated">Updated <b id="updatedSeconds">now</b></span>
+        </div>
+        <div class="recommendations">
+          <article class="parking-option recommended">
+            <div class="option-top"><span class="best">BEST MATCH</span><span class="confidence">82% confidence</span></div>
+            <h2>MLCP Level 4 <span>Zone B</span></h2>
+            <div class="option-stats">
+              <div><strong id="level4Spaces">14</strong><small>spaces now</small></div>
+              <div><strong>4 min</strong><small>walk to B4</small></div>
+              <div><strong>Gate 3</strong><small>entry route</small></div>
+            </div>
+            <p class="rationale">✦ Recommended because Level 3 is filling quickly and Zone B offers the shortest reliable walk to Building 4.</p>
+            <button class="primary" id="chooseRecommended">Choose this zone <span>→</span></button>
+          </article>
+          <article class="parking-option">
+            <div class="option-top"><span class="backup">BACKUP</span><span class="confidence amber">68% confidence</span></div>
+            <h2>MLCP Level 5 <span>Zone D</span></h2>
+            <div class="option-stats compact">
+              <div><strong id="level5Spaces">9</strong><small>spaces now</small></div>
+              <div><strong>7 min</strong><small>walk to B4</small></div>
+            </div>
+            <p class="muted">More capacity may open, but one nearby zone is under maintenance.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="reserve">
+        <div class="screen-heading">
+          <div><p class="eyebrow">STEP 3</p><h1>Reserve your bay</h1></div>
+          <span class="copilot-badge">MLCP L4 · ZONE B</span>
+        </div>
+        <div class="split-layout">
+          <div class="surface bay-map-card">
+            <div class="bay-map-heading"><strong>Zone B live map</strong><span><i class="live-dot"></i> Live</span></div>
+            <div id="bayGrid" class="bay-grid"></div>
+            <div class="bay-legend">
+              <span><i class="available"></i>Available</span>
+              <span><i class="occupied"></i>Occupied</span>
+              <span><i class="reserved"></i>Selected</span>
+              <span><i class="accessible"></i>Accessible</span>
+            </div>
+          </div>
+          <div class="surface reservation-card">
+            <p class="eyebrow">SELECTED BAY</p>
+            <div class="selected-bay">B-17</div>
+            <p>Near the east elevator · Standard bay</p>
+            <dl>
+              <div><dt>Arrival</dt><dd id="reservationArrival">10:00 AM</dd></div>
+              <div><dt>Hold period</dt><dd>10 minutes</dd></div>
+              <div><dt>Auto-release</dt><dd>10:10 AM</dd></div>
+            </dl>
+            <button class="primary" id="confirmReservation">Confirm reservation <span>→</span></button>
+            <small class="fine-print">The bay returns to the shared pool if you do not check in.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="navigate">
+        <div class="screen-heading">
+          <div><p class="eyebrow">STEP 4</p><h1>Reservation confirmed</h1></div>
+          <span class="reservation-id">PW-2048</span>
+        </div>
+        <div class="navigation-layout">
+          <div class="surface route-card">
+            <div class="route-map">
+              <span class="route-start">You</span>
+              <span class="route-gate">GATE 3</span>
+              <span class="route-mlcp">MLCP</span>
+              <span class="route-level">L4 · B</span>
+              <div class="animated-route"></div>
+            </div>
+          </div>
+          <div class="surface directions-card">
+            <span class="success-chip">✓ BAY B-17 HELD</span>
+            <h2>Enter through Gate 3</h2>
+            <p>Follow MLCP signs, continue to Level 4, and turn toward Zone B.</p>
+            <div class="countdown"><small>Reservation expires in</small><strong id="reservationTimer">09:59</strong></div>
+            <button class="primary" id="arriveGate">I have reached Gate 3 <span>→</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="garage">
+        <div class="screen-heading">
+          <div><p class="eyebrow">STEP 5</p><h1>Welcome to MLCP Level 4</h1></div>
+          <span class="success-chip">B-17 RESERVED FOR YOU</span>
+        </div>
+        <div class="garage-guide surface">
+          <div class="garage-lane">
+            <div class="car">▲</div>
+            <div class="lane-line"></div>
+            <div class="bay-sign">ZONE B<br><strong>B-17</strong></div>
+          </div>
+          <div class="garage-copy">
+            <h2>Your bay is 40 metres ahead</h2>
+            <p>Continue straight. B-17 is on your right, near the east elevator.</p>
+            <button class="primary" id="parkCar">I have parked in B-17 <span>→</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="checkin">
+        <div class="screen-heading">
+          <div><p class="eyebrow">CHECK IN</p><h1>Scan the bay QR code</h1></div>
+          <span class="copilot-badge">OPTIONAL LOCATION MEMORY</span>
+        </div>
+        <div class="checkin-layout surface">
+          <div class="qr-code" aria-label="Demo QR code">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div>
+            <h2>Bay B-17</h2>
+            <p>Scanning confirms the bay is occupied and saves it to your ParkWise journey.</p>
+            <button class="primary" id="scanQr">Simulate QR scan <span class="scan-icon">⌗</span></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="parked">
+        <div class="completion">
+          <div class="completion-icon">✓</div>
+          <p class="eyebrow">JOURNEY COMPLETE</p>
+          <h1>You are parked.</h1>
+          <p class="completion-location">MLCP · Level 4 · Zone B · Bay B-17</p>
+          <div class="completion-actions">
+            <button class="secondary" id="routeBuilding">Walking route to Building 4</button>
+            <button class="primary" id="findCar">Find my car later <span>→</span></button>
+          </div>
+          <div id="returnCard" class="return-card">
+            <strong>Return route saved</strong>
+            <span>Building 4 → East walkway → MLCP L4 → B-17</span>
+          </div>
+          <button class="text-button" id="restartDemo">↻ Restart complete demo</button>
+          <button class="text-button" id="returnMoveInSync">← Return to employee app</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="moveinsync-adapter.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

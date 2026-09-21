@@ -1,0 +1,19 @@
+{
+  "name": "ParkWise HYD Smart Parking Copilot",
+  "short_name": "ParkWise",
+  "description": "Reserve, navigate to, and remember parking at Microsoft Hyderabad.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#eef3f8",
+  "theme_color": "#0f1d3b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
